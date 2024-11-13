@@ -38,8 +38,7 @@
 
             const recommendationsDiv = document.getElementById('recommendations');
             recommendationsDiv.innerHTML = "<h2>Recommendations:</h2>";
-
-            // Loop through recommendations and display each with title and poster
+            
             data.recommendations.forEach(movie => {
                 recommendationsDiv.innerHTML += `
                     <div class="movie">
