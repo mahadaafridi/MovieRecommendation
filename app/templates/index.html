@@ -1,3 +1,4 @@
+<!-- index.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -9,11 +10,45 @@
 <body>
     <div class="container">
         <h1>Movie Recommendation System</h1>
-        <form action="{{ url_for('main.recommend') }}" method="POST">
+        
+        <form id="recommendationForm">
             <label for="movie_name">Enter a movie you like:</label>
             <input type="text" id="movie_name" name="movie_name" placeholder="e.g., Inception" required>
             <button type="submit">Get Recommendations</button>
         </form>
+
+        <div id="recommendations" class="recommendations"></div>
     </div>
+
+    <script>
+        document.getElementById('recommendationForm').onsubmit = async function(event) {
+            event.preventDefault();
+
+            const movieName = document.getElementById('movie_name').value;
+
+            const response = await fetch("{{ url_for('main.recommend') }}", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ movie_name: movieName })
+            });
+            
+            const data = await response.json();
+
+            const recommendationsDiv = document.getElementById('recommendations');
+            recommendationsDiv.innerHTML = "<h2>Recommendations:</h2>";
+
+            // Loop through recommendations and display each with title and poster
+            data.recommendations.forEach(movie => {
+                recommendationsDiv.innerHTML += `
+                    <div class="movie">
+                        <img src="${movie.poster_url || ''}" alt="${movie.title}" width="100">
+                        <p>${movie.title}</p>
+                    </div>
+                `;
+            });
+        };
+    </script>
 </body>
 </html>
