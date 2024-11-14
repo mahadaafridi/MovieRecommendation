@@ -26,6 +26,8 @@ def get_recommendations(movie_name: str):
     features = ['keywords', 'cast', 'genres', 'director']
     for feature in features:
         df[feature] = df[feature].fillna('')
+    
+    #create the sentence that will represent the movie with all the neceassy details from the movie  
     df["combined_features"] = df.apply(lambda row: row['keywords'] + " " + row['cast'] + " " + row['genres'] + " " + row['director'], axis=1)
     
     movie_index = df[df['title'] == movie_name].index[0]
