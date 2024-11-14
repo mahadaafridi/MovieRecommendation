@@ -1,4 +1,4 @@
-<!-- index.html -->
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -9,11 +9,11 @@
 </head>
 <body>
     <div class="container">
-        <h1>Movie Recommendation System</h1>
+        <h1>Movie Recommendations</h1>
         
-        <form id="recommendationForm">
+        <form id="form">
             <label for="movie_name">Enter a movie you like:</label>
-            <input type="text" id="movie_name" name="movie_name" placeholder="e.g., Inception" required>
+            <input type="text" id="movie_name" name="movie_name" required>
             <button type="submit">Get Recommendations</button>
         </form>
 
@@ -21,29 +21,31 @@
     </div>
 
     <script>
-        document.getElementById('recommendationForm').onsubmit = async function(event) {
+        document.getElementById('form').onsubmit = async function(event) {
             event.preventDefault();
 
-            const movieName = document.getElementById('movie_name').value;
+            const moviename = document.getElementById('movie_name').value;
 
             const response = await fetch("{{ url_for('main.recommend') }}", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
                 },
-                body: JSON.stringify({ movie_name: movieName })
+                body: JSON.stringify({ movie_name: moviename })
             });
             
             const data = await response.json();
 
-            const recommendationsDiv = document.getElementById('recommendations');
-            recommendationsDiv.innerHTML = "<h2>Recommendations:</h2>";
+            const recommendations_div = document.getElementById('recommendations');
+            recommendations_div.innerHTML = "<h2>Recommendations:</h2>";
             
             data.recommendations.forEach(movie => {
-                recommendationsDiv.innerHTML += `
+                recommendations_div.innerHTML += `
                     <div class="movie">
                         <img src="${movie.poster_url || ''}" alt="${movie.title}" width="100">
                         <p>${movie.title}</p>
+                        <p>Similarity Score: ${movie.similarity_score}%</p>
+
                     </div>
                 `;
             });
